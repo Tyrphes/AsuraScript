@@ -1,10 +1,15 @@
 local plr = game.Players.LocalPlayer
 local Running = false
+local NeedEat = false
 local AutoEatDebounce = tick()
 local AutoRun = true
-local AutoEat = false
+local AutoEat = true
 local Animation = Instance.new("Animation")
 Animation.AnimationId = "rbxassetid://13368456722"
+
+if _G.LoopPro then
+	_G.LoopPro:Disconnect()
+end
 
 local RunAnimation = plr.Character.Humanoid:LoadAnimation(Animation)
 
@@ -91,12 +96,12 @@ function TakeStrikingPower()
 	--AutoMove(Vector3.new(-2127.33, 26.875, -1243.24))
 	--AutoMove(Vector3.new(-2129.3, 26.875, -1244.43))
 	for i,v in pairs(workspace.Purchases.GYM:GetChildren()) do
-		
+
 		if v.Name == "Strike Power Training" and math.ceil(v.Part.Position.Y) == 27 then
 			fireclickdetector(v.ClickDetector)
 		end
 	end
-	
+
 	plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Strike Power Training"))
 	wait(0.5)
 	mouse1click()
@@ -127,7 +132,15 @@ function AutoBuyProtein()
 	end
 end
 
-RunService.Heartbeat:Connect(function()
+function AutoEatFunc()
+	plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Protein Shake"))
+	wait(0.2)
+	mouse1click()
+	wait(2)
+	plr.Character.Humanoid:UnequipTools()
+end
+
+_G.LoopPro = RunService.Heartbeat:Connect(function()
 	if AutoRun == true then
 
 		plr.Character.Humanoid.WalkSpeed = 32
@@ -150,21 +163,23 @@ RunService.Heartbeat:Connect(function()
 	end
 
 	if AutoEat == true then
-		if PlayerGui.Main.HUD.Hunger.Clipping.Size.X.Scale <= 0.1 or PlayerGui.Main.HUD.Protein.Clipping.Size.X.Scale <= 0.05 then
-			if plr.Backpack:FindFirstChild("Protein Shake") and tick()-AutoEatDebounce >= 10 then
-				AutoEatDebounce = tick()
-				wait(2)
-				
-				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Protein Shake"))
-				wait(0.2)
-				mouse1click()
-				wait(1)
-				plr.Character.Humanoid:UnequipTools()
+		
+		if PlayerGui.Main.HUD.Hunger.Clipping.Size.X.Scale <= 0.5 then
+			if plr.Backpack:FindFirstChild("Protein Shake") then
+				NeedEat = true
+			else
+				NeedEat = false
 			end
+		else
+			NeedEat = false
 		end
 	end
 end)
 
 while wait(1) do
-	TakeStrikingPower() DoStrikingPower()
+	if NeedEat == true then
+		AutoEatFunc()
+	end
+	TakeStrikingPower() 
+	DoStrikingPower()
 end
