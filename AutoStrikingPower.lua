@@ -133,7 +133,13 @@ function AutoBuyProtein()
 end
 
 function AutoEatFunc()
-	plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Protein Shake"))
+	if plr.Backpack:FindFirstChild("Protein Shake") then
+		plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Protein Shake"))
+	elseif plr.Character:FindFirstChild("Chicken") then
+		plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Chicken"))
+	elseif plr.Character:FindFirstChild("Cheeseburger") then
+		plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Cheeseburger"))
+	end
 	wait(0.2)
 	mouse1click()
 	wait(2)
@@ -165,7 +171,7 @@ _G.LoopPro = RunService.Heartbeat:Connect(function()
 	if AutoEat == true then
 		
 		if PlayerGui.Main.HUD.Hunger.Clipping.Size.X.Scale <= 0.5 then
-			if plr.Backpack:FindFirstChild("Protein Shake") then
+			if plr.Backpack:FindFirstChild("Protein Shake") or plr.Backpack:FindFirstChild("Chicken") plr.Backpack:FindFirstChild("Cheeseburger") then
 				NeedEat = true
 			else
 				NeedEat = false
