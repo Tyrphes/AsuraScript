@@ -1,11 +1,35 @@
-local plr = game.Players.LocalPlayer
+
+local pathfinding = game:GetService("PathfindingService")
+local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+local TextChatService = game:GetService("TextChatService")
+
 local Running = false
 local NeedEat = false
-local AutoEatDebounce = tick()
-local AutoRun = true
-local AutoEat = true
+
+
+
 local Animation = Instance.new("Animation")
 Animation.AnimationId = "rbxassetid://13368456722"
+
+
+local plr = game.Players.LocalPlayer
+local PlayerGui = plr.PlayerGui
+
+
+local AutoRun = true
+
+
+
+local Settings = {
+	AutoEatProtein = false,
+	AutoEatChicken = false,
+	AutoEatBurger = false,
+	AutoStrikingPower = false,
+	AutoDelivery = false,
+	Hunger = 50,
+}
 
 if _G.LoopPro then
 	_G.LoopPro:Disconnect()
@@ -13,17 +37,14 @@ end
 
 local RunAnimation = plr.Character.Humanoid:LoadAnimation(Animation)
 
-local PlayerGui = plr.PlayerGui
-local pathfinding = game:GetService("PathfindingService")
-local RunService = game:GetService("RunService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
 --1606.32, 4.15, -1655.69
 function AutoMove(PosEnd)
 	local path = pathfinding:CreatePath(
 		{
-			WaypointSpacing = 2.5,
+			--WaypointSpacing = 2.5,
 			AgentHeight = 6;
-			AgentRadius = 3.5;
+			--AgentRadius = 3.5;
 
 		}
 	)
@@ -93,7 +114,12 @@ function DoRoadwork()
 end
 
 function TakeStrikingPower()
-	--AutoMove(Vector3.new(-2127.33, 26.875, -1243.24))
+	AutoRun = true
+	AutoMove(Vector3.new(-2127.33, 26.875, -1243.24))
+	AutoRun = false
+	local TurnTime = Random.new():NextNumber()
+	TweenService:Create(plr.Character.HumanoidRootPart,TweenInfo.new(TurnTime),{CFrame = CFrame.new(plr.Character.HumanoidRootPart.Position) * CFrame.Angles(0,math.rad(90),0)}):Play()
+	wait(TurnTime)
 	--AutoMove(Vector3.new(-2129.3, 26.875, -1244.43))
 	for i,v in pairs(workspace.Purchases.GYM:GetChildren()) do
 
@@ -107,6 +133,7 @@ function TakeStrikingPower()
 	mouse1click()
 	wait(1)
 	plr.Character.Humanoid:UnequipTools()
+	
 end
 
 function DoStrikingPower()
@@ -133,17 +160,19 @@ function AutoBuyProtein()
 end
 
 function AutoEatFunc()
-	if plr.Backpack:FindFirstChild("Protein Shake") then
-		plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Protein Shake"))
-	elseif plr.Character:FindFirstChild("Chicken") then
-		plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Chicken"))
-	elseif plr.Character:FindFirstChild("Cheeseburger") then
-		plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Cheeseburger"))
+	if plr.Backpack:FindFirstChild("Protein Shake") or plr.Backpack:FindFirstChild("Chicken") or plr.Backpack:FindFirstChild("Cheeseburger") then
+		if plr.Backpack:FindFirstChild("Protein Shake") and Settings["AutoEatProtein"] == true then
+			plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Protein Shake"))
+		elseif plr.Character:FindFirstChild("Chicken") and Settings["AutoEatChicken"] == true then
+			plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Chicken"))
+		elseif plr.Character:FindFirstChild("Cheeseburger") and Settings["AutoEatBurger"] == true then
+			plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Cheeseburger"))
+		end
+		wait(0.2)
+		mouse1click()
+		wait(2)
+		plr.Character.Humanoid:UnequipTools()
 	end
-	wait(0.2)
-	mouse1click()
-	wait(2)
-	plr.Character.Humanoid:UnequipTools()
 end
 
 _G.LoopPro = RunService.Heartbeat:Connect(function()
@@ -168,24 +197,89 @@ _G.LoopPro = RunService.Heartbeat:Connect(function()
 		RunAnimation:Stop()
 	end
 
-	if AutoEat == true then
-		
-		if PlayerGui.Main.HUD.Hunger.Clipping.Size.X.Scale <= 0.5 then
-			if plr.Backpack:FindFirstChild("Protein Shake") or plr.Backpack:FindFirstChild("Chicken") or plr.Backpack:FindFirstChild("Cheeseburger") then
+	
+
+		if PlayerGui.Main.HUD.Hunger.Clipping.Size.X.Scale <= Settings["Hunger"]/100 then
+			
 				NeedEat = true
-			else
-				NeedEat = false
-			end
+			
 		else
 			NeedEat = false
+		end
+	
+end)
+spawn(function()
+	while wait(1) do
+		if Settings["AutoStrikingPower"] then
+			local MyMoney = string.gsub(PlayerGui.Main.HUD.Cash.Text,"%D","")
+			if NeedEat == true then
+				AutoEatFunc()
+			end
+			TakeStrikingPower() 
+			DoStrikingPower()
 		end
 	end
 end)
 
-while wait(1) do
-	if NeedEat == true then
-		AutoEatFunc()
-	end
-	TakeStrikingPower() 
-	DoStrikingPower()
-end
+
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Tyrphes/AsuraScript/main/UILib.lua"))()
+
+local Wm = library:Watermark(library:GetUsername())
+
+local Notif = library:InitNotifications()
+
+
+library.title = "Ếch ngu hub"
+
+library:Introduction()
+wait(1)
+local Init = library:Init()
+
+local Tab1 = Init:NewTab("Auto")
+
+local AutoTrain = Tab1:NewSection("Auto Training")
+
+
+local AutoStrikingPower = Tab1:NewToggle("Auto Striking Power", false, function(value)
+
+	
+	Settings["AutoStrikingPower"] = value
+end)
+
+local AutoRoadwork = Tab1:NewToggle("Auto Roadwork", false, function(value)
+	local vers = value and "on" or "off"
+	print("two " .. vers)
+end)
+
+
+
+local AutoEat = Tab1:NewSection("Auto Eat")
+
+local Protein = Tab1:NewToggle("Protein", false, function(value)
+	
+	Settings["AutoEatProtein"] = value
+end)
+
+local Chicken = Tab1:NewToggle("Chicken", false, function(value)
+
+	Settings["AutoEatChicken"] = value
+end) 
+
+local Burger = Tab1:NewToggle("Burger", false, function(value)
+
+	Settings["AutoEatBurger"] = value
+end) 
+
+local Hunger = Tab1:NewSlider("Hunger percent", "", true, "/", {min = 1, max = 100, default = 50}, function(value)
+	
+	Settings["Hunger"] = value
+end)
+
+local AutoJob = Tab1:NewSection("Auto Job")
+
+local AutoDelivery = Tab1:NewToggle("Auto Delivery", false, function(value)
+	local vers = value and "on" or "off"
+	print("one " .. vers)
+end)
+
+
