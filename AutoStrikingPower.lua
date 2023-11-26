@@ -12,7 +12,7 @@ local NeedEat = false
 
 
 local Animation = Instance.new("Animation")
-Animation.AnimationId = "rbxassetid://13368456722"
+Animation.AnimationId = "rbxassetid://13368457704"
 
 
 local plr = game.Players.LocalPlayer
@@ -251,7 +251,17 @@ spawn(function()
 		end
 	end
 end)
-
+spawn(function()
+	while wait(1) do
+		if Settings["AutoRoadwork"] then
+			if NeedEat == true then
+				AutoEatFunc()
+			end
+			TakeRoadwork()
+			DoRoadwork()
+		end
+	end
+end)
 
 
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Tyrphes/AsuraScript/main/UILib.lua"))()
@@ -265,7 +275,7 @@ library.title = "Ếch ngu hub"
 
 library:Introduction()
 wait(1)
-local Init = library:Init()
+local Init = library:Init(Enum.KeyCode.RightControl)
 
 local Tab1 = Init:NewTab("Auto")
 
@@ -279,8 +289,7 @@ local AutoStrikingPower = Tab1:NewToggle("Auto Striking Power", false, function(
 end)
 
 local AutoRoadwork = Tab1:NewToggle("Auto Roadwork", false, function(value)
-	local vers = value and "on" or "off"
-	print("two " .. vers)
+	Settings["AutoRoadwork"] = value
 end)
 
 
@@ -313,9 +322,5 @@ local AutoDelivery = Tab1:NewToggle("Auto Delivery", false, function(value)
 	Settings["AutoDelivery"] = value
 end)
 
-UIS.InputBegan:Connect(function(input)
-	if input.KeyCode == Enum.KeyCode.RightControl then
-		game.CoreGui.screen.Enabled = not game.CoreGui.screen.Enabled
-	end
-end)
+
 
