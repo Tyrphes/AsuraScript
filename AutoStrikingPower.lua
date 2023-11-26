@@ -25,9 +25,10 @@ local AutoRun = true
 
 local Settings = {
 	AutoEatProtein = false,
-	AutoEatChicken = true,
-	AutoEatBurger = true,
+	AutoEatChicken = false,
+	AutoEatBurger = false,
 	AutoStrikingPower = false,
+	AutoRoadwork = false,
 	AutoDelivery = false,
 	Hunger = 50,
 }
@@ -253,7 +254,6 @@ end)
 
 
 
-
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Tyrphes/AsuraScript/main/UILib.lua"))()
 
 local Wm = library:Watermark(library:GetUsername())
@@ -314,7 +314,7 @@ local AutoDelivery = Tab1:NewToggle("Auto Delivery", false, function(value)
 end)
 
 UIS.InputBegan:Connect(function(input)
-	if input.KeyCode == Enum.KeyCode.RightAlt then
+	if input.KeyCode == Enum.KeyCode.RightControl then
 		game.CoreGui.screen.Enabled = not game.CoreGui.screen.Enabled
 	end
 end)
