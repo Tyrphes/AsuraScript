@@ -4,6 +4,7 @@ local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local TextChatService = game:GetService("TextChatService")
+local UIS = game:GetService("UserInputService")
 
 local Running = false
 local NeedEat = false
@@ -24,8 +25,8 @@ local AutoRun = true
 
 local Settings = {
 	AutoEatProtein = false,
-	AutoEatChicken = false,
-	AutoEatBurger = false,
+	AutoEatChicken = true,
+	AutoEatBurger = true,
 	AutoStrikingPower = false,
 	AutoDelivery = false,
 	Hunger = 50,
@@ -164,12 +165,20 @@ end
 
 function AutoEatFunc()
 	if plr.Backpack:FindFirstChild("Protein Shake") or plr.Backpack:FindFirstChild("Chicken") or plr.Backpack:FindFirstChild("Cheeseburger") then
-		if plr.Backpack:FindFirstChild("Protein Shake") and Settings["AutoEatProtein"] == true then
-			plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Protein Shake"))
-		elseif plr.Character:FindFirstChild("Chicken") and Settings["AutoEatChicken"] == true then
-			plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Chicken"))
-		elseif plr.Character:FindFirstChild("Cheeseburger") and Settings["AutoEatBurger"] == true then
-			plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Cheeseburger"))
+		if plr.Backpack:FindFirstChild("Protein Shake") then
+			if Settings["AutoEatProtein"] == true then
+				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Protein Shake"))
+			end
+		elseif plr.Backpack:FindFirstChild("Chicken") then
+			
+			if Settings["AutoEatChicken"] == true then
+				print("gothis")
+				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Chicken")) 
+			end
+		elseif plr.Backpack:FindFirstChild("Cheeseburger")  then
+			if Settings["AutoEatBurger"] == true then
+				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Cheeseburger"))
+			end
 		end
 		wait(0.2)
 		mouse1click()
@@ -181,7 +190,7 @@ end
 _G.LoopPro = RunService.Heartbeat:Connect(function()
 	if AutoRun == true then
 
-		plr.Character.Humanoid.WalkSpeed = 32
+		plr.Character.Humanoid.WalkSpeed = 50
 		if RunAnimation.IsPlaying == false then
 			if plr.Character.Humanoid.MoveDirection ~= Vector3.zero or plr.Character.Humanoid.WalkToPoint ~= Vector3.zero then
 				if plr.Character.HumanoidRootPart.Velocity.Magnitude > 1 then
@@ -304,4 +313,9 @@ local AutoDelivery = Tab1:NewToggle("Auto Delivery", false, function(value)
 	Settings["AutoDelivery"] = value
 end)
 
+UIS.InputBegan:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.RightAlt then
+		game.CoreGui.screen.Enabled = not game.CoreGui.screen.Enabled
+	end
+end)
 
