@@ -171,7 +171,7 @@ _G.LoopPro = RunService.Heartbeat:Connect(function()
 	if AutoEat == true then
 		
 		if PlayerGui.Main.HUD.Hunger.Clipping.Size.X.Scale <= 0.5 then
-			if plr.Backpack:FindFirstChild("Protein Shake") or plr.Backpack:FindFirstChild("Chicken") plr.Backpack:FindFirstChild("Cheeseburger") then
+			if plr.Backpack:FindFirstChild("Protein Shake") or plr.Backpack:FindFirstChild("Chicken") or plr.Backpack:FindFirstChild("Cheeseburger") then
 				NeedEat = true
 			else
 				NeedEat = false
