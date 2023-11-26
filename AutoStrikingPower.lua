@@ -196,7 +196,7 @@ end
 _G.LoopPro = RunService.Heartbeat:Connect(function()
 	if AutoRun == true then
 
-		plr.Character.Humanoid.WalkSpeed = 40
+		plr.Character.Humanoid.WalkSpeed = 32
 		if RunAnimation.IsPlaying == false then
 			if plr.Character.Humanoid.MoveDirection ~= Vector3.zero or plr.Character.Humanoid.WalkToPoint ~= Vector3.zero then
 				if plr.Character.HumanoidRootPart.Velocity.Magnitude > 1 then
