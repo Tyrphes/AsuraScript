@@ -65,13 +65,16 @@ function DoJob()
 
 	local JobBillboard = PlayerGui.BillboardGui
 	for i = 1,2 do
+		AutoRun = true
 		AutoMove(JobBillboard.Adornee.Position)
 		print("finished1")
 		if i == 1 then
+			AutoRun = false
 			wait(0.5)
 			local JobBillboard = PlayerGui.BillboardGui
 		end
 	end
+	AutoRun = false
 end
 
 
@@ -211,7 +214,7 @@ end)
 spawn(function()
 	while wait(1) do
 		if Settings["AutoStrikingPower"] then
-			local MyMoney = string.gsub(PlayerGui.Main.HUD.Cash.Text,"%D","")
+			
 			if NeedEat == true then
 				AutoEatFunc()
 			end
@@ -220,6 +223,26 @@ spawn(function()
 		end
 	end
 end)
+spawn(function()
+	while wait(1) do
+		if Settings["AutoDelivery"] then
+			if NeedEat == true then
+				AutoEatFunc()
+			end
+			TakeJob()
+			DoJob()
+			local MyMoney = string.gsub(PlayerGui.Main.HUD.Cash.Text,"%D","")
+			if tonumber(MyMoney) >= 250000 then
+				AutoRun = true
+				AutoMove(Vector3.new(-1773.29, 4.25, -1447.8))
+				AutoRun = false
+				ReplicatedStorage.Events.Bank:FireServer("Deposit",250000)
+			end
+		end
+	end
+end)
+
+
 
 
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Tyrphes/AsuraScript/main/UILib.lua"))()
@@ -278,8 +301,7 @@ end)
 local AutoJob = Tab1:NewSection("Auto Job")
 
 local AutoDelivery = Tab1:NewToggle("Auto Delivery", false, function(value)
-	local vers = value and "on" or "off"
-	print("one " .. vers)
+	Settings["AutoDelivery"] = value
 end)
 
 
