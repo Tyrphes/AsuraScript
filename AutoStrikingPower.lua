@@ -314,7 +314,7 @@ local Chicken = Tab1:NewToggle("Chicken", false, function(value)
 end) 
 
 local Burger = Tab1:NewToggle("Burger", false, function(value)
-
+	
 	Settings["AutoEatBurger"] = value
 end) 
 
