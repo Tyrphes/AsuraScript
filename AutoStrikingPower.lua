@@ -31,6 +31,7 @@ local Settings = {
 	AutoRoadwork = false,
 	AutoDelivery = false,
 	Hunger = 50,
+	RoadworkType = "Speed",
 }
 
 if _G.LoopPro then
@@ -44,9 +45,9 @@ local RunAnimation = plr.Character.Humanoid:LoadAnimation(Animation)
 function AutoMove(PosEnd)
 	local path = pathfinding:CreatePath(
 		{
-			--WaypointSpacing = 2.5,
+			WaypointSpacing = 2.5,
 			AgentHeight = 6;
-			--AgentRadius = 3.5;
+			AgentRadius = 3.5;
 
 		}
 	)
@@ -96,7 +97,9 @@ function TakeJob()
 end
 
 function TakeRoadwork()
+	AutoRun = true
 	AutoMove(Vector3.new(5833.5, -20.3998, 2849.09))
+	AutoRun = false
 	for i,v in pairs(workspace.Purchases.GYM:GetChildren()) do
 		if v.Name == "Roadwork Training" and math.ceil(v.Part.Position.Y) == -23 then
 			fireclickdetector(v.ClickDetector)
@@ -106,15 +109,17 @@ function TakeRoadwork()
 	wait(0.5)
 	mouse1click()
 	wait(0.75)
-	firesignal(PlayerGui.RoadworkGain.Frame.Stamina.MouseButton1Up)
+	firesignal(PlayerGui.RoadworkGain.Frame[Settings["RoadworkType"]].MouseButton1Up)
 	wait(1)
 	plr.Character.Humanoid:UnequipTools()
 end
 
 function DoRoadwork()
 	for i = 1,9 do
+		AutoRun = true
 		local EndPoint = workspace.Roadworks.Senkaimon[tostring(i)].Position
 		AutoMove(EndPoint)
+		AutoRun = false
 	end
 end
 
@@ -292,7 +297,9 @@ local AutoRoadwork = Tab1:NewToggle("Auto Roadwork", false, function(value)
 	Settings["AutoRoadwork"] = value
 end)
 
-
+local RoadType = Tab1:NewSelector("Roadwork stat","Stamina",{"Stamina","Speed"},function(d)
+	Settings["RoadworkType"] = d
+end)
 
 local AutoEat = Tab1:NewSection("Auto Eat")
 
