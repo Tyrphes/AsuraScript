@@ -124,16 +124,16 @@ function DoRoadwork()
 end
 
 function TakeStrikingPower()
-	AutoRun = true
+	--[[AutoRun = true
 	AutoMove(Vector3.new(-2127.33, 26.875, -1243.24))
 	AutoRun = false
 	local TurnTime = Random.new():NextNumber()
 	TweenService:Create(plr.Character.HumanoidRootPart,TweenInfo.new(TurnTime),{CFrame = CFrame.new(plr.Character.HumanoidRootPart.Position) * CFrame.Angles(0,math.rad(90),0)}):Play()
-	wait(TurnTime)
+	wait(TurnTime)]]
 	--AutoMove(Vector3.new(-2129.3, 26.875, -1244.43))
 	for i,v in pairs(workspace.Purchases.GYM:GetChildren()) do
 
-		if v.Name == "Strike Power Training" and math.ceil(v.Part.Position.Y) == 27 then
+		if v.Name == "Strike Power Training" and math.ceil(v.Part.Position.Y) == -23 then
 			fireclickdetector(v.ClickDetector)
 		end
 	end
