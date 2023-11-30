@@ -151,7 +151,7 @@ function DoStrikingPower()
 	plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Combat"))
 	local i = 0
 	repeat
-		plr.Character.Combat:Activated()
+		plr.Character.Combat:Activate()
 		wait(1.5)
 	until not plr.Character:FindFirstChild("Gloves")
 end
