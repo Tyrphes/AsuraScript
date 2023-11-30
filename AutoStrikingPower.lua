@@ -45,7 +45,7 @@ local RunAnimation = plr.Character.Humanoid:LoadAnimation(Animation)
 function UseTool(Tool)
 	plr.Character.Humanoid:EquipTool(Tool)
 	wait(0.5)
-	Tool:Activate()
+	plr.Character:FindFirstChild(Tool.Name):Activate()
 end
 
 function AutoMove(PosEnd)
