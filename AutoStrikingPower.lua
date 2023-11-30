@@ -27,6 +27,8 @@ local Settings = {
 	AutoEatProtein = false,
 	AutoEatChicken = false,
 	AutoEatBurger = false,
+	AutoEatSushi = false,
+	AutoEatMilkshake = false,
 	AutoStrikingPower = false,
 	AutoRoadwork = false,
 	AutoDelivery = false,
@@ -143,7 +145,7 @@ function TakeStrikingPower()
 	mouse1click()
 	wait(1)
 	plr.Character.Humanoid:UnequipTools()
-	
+
 end
 
 function DoStrikingPower()
@@ -176,7 +178,7 @@ function AutoEatFunc()
 				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Protein Shake"))
 			end
 		elseif plr.Backpack:FindFirstChild("Chicken") then
-			
+
 			if Settings["AutoEatChicken"] == true then
 				print("gothis")
 				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Chicken")) 
@@ -184,6 +186,14 @@ function AutoEatFunc()
 		elseif plr.Backpack:FindFirstChild("Cheeseburger")  then
 			if Settings["AutoEatBurger"] == true then
 				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Cheeseburger"))
+			end
+		elseif plr.Backpack:FindFirstChild("Sushi") then
+			if Settings["AutoEatSushi"] == true then
+				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Sushi"))
+			end
+		elseif plr.Backpack:FindFirstChild("Milkshake") then
+			if Settings["AutoEatMilkshake"] == true then
+				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Milkshake"))
 			end
 		end
 		wait(0.2)
@@ -215,21 +225,21 @@ _G.LoopPro = RunService.Heartbeat:Connect(function()
 		RunAnimation:Stop()
 	end
 
-	
 
-		if PlayerGui.Main.HUD.Hunger.Clipping.Size.X.Scale <= Settings["Hunger"]/100 then
-			
-				NeedEat = true
-			
-		else
-			NeedEat = false
-		end
-	
+
+	if PlayerGui.Main.HUD.Hunger.Clipping.Size.X.Scale <= Settings["Hunger"]/100 then
+
+		NeedEat = true
+
+	else
+		NeedEat = false
+	end
+
 end)
 spawn(function()
 	while wait(1) do
 		if Settings["AutoStrikingPower"] then
-			
+
 			if NeedEat == true then
 				AutoEatFunc()
 			end
@@ -289,7 +299,7 @@ local AutoTrain = Tab1:NewSection("Auto Training")
 
 local AutoStrikingPower = Tab1:NewToggle("Auto Striking Power", false, function(value)
 
-	
+
 	Settings["AutoStrikingPower"] = value
 end)
 
@@ -304,7 +314,7 @@ end)
 local AutoEat = Tab1:NewSection("Auto Eat")
 
 local Protein = Tab1:NewToggle("Protein", false, function(value)
-	
+
 	Settings["AutoEatProtein"] = value
 end)
 
@@ -314,12 +324,22 @@ local Chicken = Tab1:NewToggle("Chicken", false, function(value)
 end) 
 
 local Burger = Tab1:NewToggle("Burger", false, function(value)
-	
+
 	Settings["AutoEatBurger"] = value
 end) 
 
+local Sushi = Tab1:NewToggle("Sushi", false, function(value)
+
+	Settings["AutoEatSushi"] = value
+end) 
+local Milkshake = Tab1:NewToggle("Milkshake", false, function(value)
+
+	Settings["AutoEatMilkshake"] = value
+end) 
+
+
 local Hunger = Tab1:NewSlider("Hunger percent", "", true, "/", {min = 1, max = 100, default = 50}, function(value)
-	
+
 	Settings["Hunger"] = value
 end)
 
@@ -328,6 +348,3 @@ local AutoJob = Tab1:NewSection("Auto Job")
 local AutoDelivery = Tab1:NewToggle("Auto Delivery", false, function(value)
 	Settings["AutoDelivery"] = value
 end)
-
-
-
