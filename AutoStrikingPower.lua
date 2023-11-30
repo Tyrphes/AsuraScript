@@ -42,8 +42,12 @@ end
 
 local RunAnimation = plr.Character.Humanoid:LoadAnimation(Animation)
 
+function UseTool(Tool)
+	plr.Character.Humanoid:EquipTool(Tool)
+	wait(0.5)
+	Tool:Activate()
+end
 
---1606.32, 4.15, -1655.69
 function AutoMove(PosEnd)
 	local path = pathfinding:CreatePath(
 		{
@@ -107,9 +111,7 @@ function TakeRoadwork()
 			fireclickdetector(v.ClickDetector)
 		end
 	end
-	plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Roadwork Training"))
-	wait(0.5)
-	mouse1click()
+	UseTool(plr.Backpack:FindFirstChild("Roadwork Training"))
 	wait(0.75)
 	firesignal(PlayerGui.RoadworkGain.Frame[Settings["RoadworkType"]].MouseButton1Up)
 	wait(1)
@@ -139,10 +141,7 @@ function TakeStrikingPower()
 			fireclickdetector(v.ClickDetector)
 		end
 	end
-
-	plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Strike Power Training"))
-	wait(0.5)
-	mouse1click()
+	UseTool(plr.Backpack:FindFirstChild("Strike Power Training"))
 	wait(1)
 	plr.Character.Humanoid:UnequipTools()
 
@@ -152,13 +151,7 @@ function DoStrikingPower()
 	plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Combat"))
 	local i = 0
 	repeat
-		if i < 5 then
-			i += 1
-			mouse1click()
-		else
-			i = 0
-			mouse2click()
-		end
+		plr.Character.Combat:Activated()
 		wait(1.5)
 	until not plr.Character:FindFirstChild("Gloves")
 end
@@ -173,33 +166,35 @@ end
 
 function AutoEatFunc()
 	if plr.Backpack:FindFirstChild("Protein Shake") or plr.Backpack:FindFirstChild("Chicken") or plr.Backpack:FindFirstChild("Cheeseburger") then
+		local Tool
 		if plr.Backpack:FindFirstChild("Protein Shake") then
 			if Settings["AutoEatProtein"] == true then
-				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Protein Shake"))
+				Tool = plr.Backpack:FindFirstChild("Protein Shake")
 			end
 		elseif plr.Backpack:FindFirstChild("Chicken") then
 
 			if Settings["AutoEatChicken"] == true then
-				print("gothis")
-				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Chicken")) 
+				
+				Tool = plr.Backpack:FindFirstChild("Chicken")
 			end
 		elseif plr.Backpack:FindFirstChild("Cheeseburger")  then
 			if Settings["AutoEatBurger"] == true then
-				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Cheeseburger"))
+				Tool = plr.Backpack:FindFirstChild("Cheeseburger")
 			end
 		elseif plr.Backpack:FindFirstChild("Sushi") then
 			if Settings["AutoEatSushi"] == true then
-				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Sushi"))
+				Tool = plr.Backpack:FindFirstChild("Sushi")
 			end
 		elseif plr.Backpack:FindFirstChild("Milkshake") then
 			if Settings["AutoEatMilkshake"] == true then
-				plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild("Milkshake"))
+				Tool = plr.Backpack:FindFirstChild("Milkshake")
 			end
 		end
-		wait(0.2)
-		mouse1click()
-		wait(2)
-		plr.Character.Humanoid:UnequipTools()
+		if Tool then
+			UseTool(Tool)
+			wait(2)
+			plr.Character.Humanoid:UnequipTools()
+		end
 	end
 end
 
