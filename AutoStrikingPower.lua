@@ -45,7 +45,7 @@ local RunAnimation = plr.Character.Humanoid:LoadAnimation(Animation)
 function UseTool(Tool)
 	plr.Character.Humanoid:EquipTool(Tool)
 	wait(0.5)
-	plr.Character:FindFirstChildOfClass("Tool"):Activate()
+	plr.Character:FindFirstChild(Tool.Name):Activate()
 end
 
 function AutoMove(PosEnd)
@@ -111,6 +111,7 @@ function TakeRoadwork()
 			fireclickdetector(v.ClickDetector)
 		end
 	end
+	
 	UseTool(plr.Backpack:FindFirstChild("Roadwork Training"))
 	wait(0.75)
 	firesignal(PlayerGui.RoadworkGain.Frame[Settings["RoadworkType"]].MouseButton1Up)
