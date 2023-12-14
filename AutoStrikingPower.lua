@@ -168,28 +168,37 @@ end
 function AutoEatFunc()
 	if plr.Backpack:FindFirstChild("Protein Shake") or plr.Backpack:FindFirstChild("Chicken") or plr.Backpack:FindFirstChild("Cheeseburger") then
 		local Tool
+		local flag = 0
 		if plr.Backpack:FindFirstChild("Protein Shake") then
 			if Settings["AutoEatProtein"] == true then
 				Tool = plr.Backpack:FindFirstChild("Protein Shake")
+				flag += 1
 			end
 		elseif plr.Backpack:FindFirstChild("Chicken") then
 
 			if Settings["AutoEatChicken"] == true then
 				
 				Tool = plr.Backpack:FindFirstChild("Chicken")
+				flag += 1
 			end
 		elseif plr.Backpack:FindFirstChild("Cheeseburger")  then
 			if Settings["AutoEatBurger"] == true then
 				Tool = plr.Backpack:FindFirstChild("Cheeseburger")
+				flag += 1
 			end
 		elseif plr.Backpack:FindFirstChild("Sushi") then
 			if Settings["AutoEatSushi"] == true then
 				Tool = plr.Backpack:FindFirstChild("Sushi")
+				flag += 1
 			end
 		elseif plr.Backpack:FindFirstChild("Milkshake") then
 			if Settings["AutoEatMilkshake"] == true then
 				Tool = plr.Backpack:FindFirstChild("Milkshake")
+				flag += 1
 			end
+		end
+		if flag = 0 then
+		    plr:Kick("Ran out of food")
 		end
 		if Tool then
 			UseTool(Tool)
