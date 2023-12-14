@@ -114,8 +114,8 @@ function TakeRoadwork()
 	
 	UseTool(plr.Backpack:FindFirstChild("Roadwork Training"))
 	wait(0.75)
-	firesignal(PlayerGui.RoadworkGain.Frame[Settings["RoadworkType"]].MouseButton1Up)
-	wait(1)
+
+	wait(2)
 	plr.Character.Humanoid:UnequipTools()
 end
 
