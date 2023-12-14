@@ -70,37 +70,6 @@ function AutoMove(PosEnd)
 	RunAnimation:Stop()
 end
 
-function DoJob()
-
-	local JobBillboard = PlayerGui.BillboardGui
-	for i = 1,2 do
-		AutoRun = true
-		AutoMove(JobBillboard.Adornee.Position)
-		print("finished1")
-		if i == 1 then
-			AutoRun = false
-			wait(0.5)
-			local JobBillboard = PlayerGui.BillboardGui
-		end
-	end
-	AutoRun = false
-end
-
-
-function TakeJob()
-	repeat
-		ReplicatedStorage.Events.EventCore:FireServer("Job")
-		repeat wait() until PlayerGui.Main.LabelJob.Text ~= ""
-		if PlayerGui.Main.LabelJob.Text ~= "Deliver the crate!" then
-			ReplicatedStorage.Events.EventCore:FireServer("CancelJob")
-
-			repeat wait() until PlayerGui.Main.LabelJob.Text == ""
-		end
-
-	until PlayerGui.Main.LabelJob.Text == "Deliver the crate!"
-	repeat wait() until PlayerGui:FindFirstChild("BillboardGui")
-	print("found job")
-end
 
 function TakeRoadwork()
 	AutoRun = true
@@ -111,7 +80,7 @@ function TakeRoadwork()
 			fireclickdetector(v.ClickDetector)
 		end
 	end
-	
+
 	UseTool(plr.Backpack:FindFirstChild("Roadwork Training"))
 	wait(0.75)
 	firesignal(PlayerGui.RoadworkGain.Frame[Settings["RoadworkType"]].MouseButton1Up)
@@ -165,45 +134,78 @@ function AutoBuyProtein()
 	end
 end
 
+function DoJob()
+
+	local JobBillboard = PlayerGui.BillboardGui
+	for i = 1,2 do
+		AutoRun = true
+		AutoMove(JobBillboard.Adornee.Position)
+		print("finished1")
+		if i == 1 then
+			AutoRun = false
+			wait(0.5)
+			local JobBillboard = PlayerGui.BillboardGui
+		end
+	end
+	AutoRun = false
+end
+
+
+function TakeJob()
+	repeat
+		ReplicatedStorage.Events.EventCore:FireServer("Job")
+		repeat wait() until PlayerGui.Main.LabelJob.Text ~= ""
+		if PlayerGui.Main.LabelJob.Text ~= "Deliver the crate!" then
+			ReplicatedStorage.Events.EventCore:FireServer("CancelJob")
+
+			repeat wait() until PlayerGui.Main.LabelJob.Text == ""
+		end
+
+	until PlayerGui.Main.LabelJob.Text == "Deliver the crate!"
+	repeat wait() until PlayerGui:FindFirstChild("BillboardGui")
+	print("found job")
+end
+
 function AutoEatFunc()
 	if plr.Backpack:FindFirstChild("Protein Shake") or plr.Backpack:FindFirstChild("Chicken") or plr.Backpack:FindFirstChild("Cheeseburger") then
 		local Tool
-		local flag = 0
+		
 		if plr.Backpack:FindFirstChild("Protein Shake") then
 			if Settings["AutoEatProtein"] == true then
 				Tool = plr.Backpack:FindFirstChild("Protein Shake")
-				flag += 1
+				
 			end
 		elseif plr.Backpack:FindFirstChild("Chicken") then
 
 			if Settings["AutoEatChicken"] == true then
-				
+
 				Tool = plr.Backpack:FindFirstChild("Chicken")
-				flag += 1
+				
 			end
 		elseif plr.Backpack:FindFirstChild("Cheeseburger")  then
 			if Settings["AutoEatBurger"] == true then
 				Tool = plr.Backpack:FindFirstChild("Cheeseburger")
-				flag += 1
+				
 			end
 		elseif plr.Backpack:FindFirstChild("Sushi") then
 			if Settings["AutoEatSushi"] == true then
 				Tool = plr.Backpack:FindFirstChild("Sushi")
-				flag += 1
+				
 			end
 		elseif plr.Backpack:FindFirstChild("Milkshake") then
 			if Settings["AutoEatMilkshake"] == true then
 				Tool = plr.Backpack:FindFirstChild("Milkshake")
-				flag += 1
+				
 			end
-		end
-		if flag == 0 then
-		    plr:Kick("Ran out of food")
 		end
 		if Tool then
 			UseTool(Tool)
 			wait(2)
 			plr.Character.Humanoid:UnequipTools()
+		end
+	else
+		if Settings["AutoEatProtein"] == false and Settings["AutoEatChicken"] == false and Settings["AutoEatBurger"] == false and Settings["AutoEatSushi"] == false and Settings["AutoEatMilkshake"] == false then
+			plr:Kick("Ran out of food")
 		end
 	end
 end
