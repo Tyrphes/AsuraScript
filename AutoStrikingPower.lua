@@ -9,7 +9,7 @@ local UIS = game:GetService("UserInputService")
 local Running = false
 local NeedEat = false
 
-local Debounce = false
+local RunTime = 1
 
 
 local Animation = Instance.new("Animation")
@@ -38,10 +38,21 @@ local Settings = {
 	Speed = 35,
 }
 
+if not _G.LoopList then
+	_G.LoopList = {true}
+else
+	table.insert(_G.LoopList,true)
+	RunTime = #_G.LoopList
+end
+
 if _G.LoopPro then
 	_G.LoopPro:Disconnect()
-	_G.LoopFarm:Disconnect()
+	if RunTime > 1 then
+		_G.LoopList[RunTime-1] = false
+	end
 end
+
+
 
 local RunAnimation = plr.Character.Humanoid:LoadAnimation(Animation)
 
@@ -147,7 +158,7 @@ function DoJob()
 		if i == 1 then
 			AutoRun = false
 			wait(0.5)
-			
+
 			local JobBillboard = PlayerGui:FindFirstChild("BillboardGui")
 			if not JobBillboard then
 				return
@@ -235,8 +246,11 @@ _G.LoopPro = RunService.Heartbeat:Connect(function()
 		Running = true
 
 	else
-		--plr.Character.Humanoid.WalkSpeed = 16
-		RunAnimation:Stop()
+		if Running == true then
+			plr.Character.Humanoid.WalkSpeed = 16
+			RunAnimation:Stop()
+			Running = false
+		end
 	end
 
 
@@ -250,43 +264,44 @@ _G.LoopPro = RunService.Heartbeat:Connect(function()
 	end
 
 end)
+spawn(function()
+	while wait(1) do
+		if _G.LoopList[RunTime] == true then
+			if Settings["AutoStrikingPower"] then
 
-_G.LoopFarm = RunService.Heartbeat:Connect(function()
-	if Debounce == false then
-		Debounce = true
-		if Settings["AutoStrikingPower"] then
-
-			if NeedEat == true then
-				AutoEatFunc()
+				if NeedEat == true then
+					AutoEatFunc()
+				end
+				TakeStrikingPower() 
+				DoStrikingPower()
 			end
-			TakeStrikingPower() 
-			DoStrikingPower()
+			if Settings["AutoDelivery"] then
+				if NeedEat == true then
+					AutoEatFunc()
+				end
+				TakeJob()
+				DoJob()
+				local MyMoney = string.gsub(PlayerGui.Main.HUD.Cash.Text,"%D","")
+				if tonumber(MyMoney) >= 250000 then
+					AutoRun = true
+					AutoMove(Vector3.new(-1773.29, 4.25, -1447.8))
+					AutoRun = false
+					ReplicatedStorage.Events.Bank:FireServer("Deposit",250000)
+				end
+			end
+			if Settings["AutoRoadwork"] then
+				if NeedEat == true then
+					AutoEatFunc()
+				end
+				TakeRoadwork()
+				DoRoadwork()
+			end
+		else
+			break
 		end
-		if Settings["AutoDelivery"] then
-			if NeedEat == true then
-				AutoEatFunc()
-			end
-			TakeJob()
-			DoJob()
-			local MyMoney = string.gsub(PlayerGui.Main.HUD.Cash.Text,"%D","")
-			if tonumber(MyMoney) >= 250000 then
-				AutoRun = true
-				AutoMove(Vector3.new(-1773.29, 4.25, -1447.8))
-				AutoRun = false
-				ReplicatedStorage.Events.Bank:FireServer("Deposit",250000)
-			end
-		end
-		if Settings["AutoRoadwork"] then
-			if NeedEat == true then
-				AutoEatFunc()
-			end
-			TakeRoadwork()
-			DoRoadwork()
-		end
-		wait(1)
-		Debounce = false
 	end
 end)
+
 
 
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Tyrphes/AsuraScript/main/UILib.lua"))()
