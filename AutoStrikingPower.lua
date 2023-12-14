@@ -9,6 +9,7 @@ local UIS = game:GetService("UserInputService")
 local Running = false
 local NeedEat = false
 
+local Debounce = false
 
 
 local Animation = Instance.new("Animation")
@@ -34,10 +35,12 @@ local Settings = {
 	AutoDelivery = false,
 	Hunger = 50,
 	RoadworkType = "Speed",
+	Speed = 35,
 }
 
 if _G.LoopPro then
 	_G.LoopPro:Disconnect()
+	_G.LoopFarm:Disconnect()
 end
 
 local RunAnimation = plr.Character.Humanoid:LoadAnimation(Animation)
@@ -169,33 +172,33 @@ end
 function AutoEatFunc()
 	if plr.Backpack:FindFirstChild("Protein Shake") or plr.Backpack:FindFirstChild("Chicken") or plr.Backpack:FindFirstChild("Cheeseburger") then
 		local Tool
-		
+
 		if plr.Backpack:FindFirstChild("Protein Shake") then
 			if Settings["AutoEatProtein"] == true then
 				Tool = plr.Backpack:FindFirstChild("Protein Shake")
-				
+
 			end
 		elseif plr.Backpack:FindFirstChild("Chicken") then
 
 			if Settings["AutoEatChicken"] == true then
 
 				Tool = plr.Backpack:FindFirstChild("Chicken")
-				
+
 			end
 		elseif plr.Backpack:FindFirstChild("Cheeseburger")  then
 			if Settings["AutoEatBurger"] == true then
 				Tool = plr.Backpack:FindFirstChild("Cheeseburger")
-				
+
 			end
 		elseif plr.Backpack:FindFirstChild("Sushi") then
 			if Settings["AutoEatSushi"] == true then
 				Tool = plr.Backpack:FindFirstChild("Sushi")
-				
+
 			end
 		elseif plr.Backpack:FindFirstChild("Milkshake") then
 			if Settings["AutoEatMilkshake"] == true then
 				Tool = plr.Backpack:FindFirstChild("Milkshake")
-				
+
 			end
 		end
 		if Tool then
@@ -213,7 +216,7 @@ end
 _G.LoopPro = RunService.Heartbeat:Connect(function()
 	if AutoRun == true then
 
-		plr.Character.Humanoid.WalkSpeed = 35
+		plr.Character.Humanoid.WalkSpeed = Settings["Speed"]
 		if RunAnimation.IsPlaying == false then
 			if plr.Character.Humanoid.MoveDirection ~= Vector3.zero or plr.Character.Humanoid.WalkToPoint ~= Vector3.zero then
 				if plr.Character.HumanoidRootPart.Velocity.Magnitude > 1 then
@@ -228,7 +231,7 @@ _G.LoopPro = RunService.Heartbeat:Connect(function()
 		Running = true
 
 	else
-		plr.Character.Humanoid.WalkSpeed = 16
+		--plr.Character.Humanoid.WalkSpeed = 16
 		RunAnimation:Stop()
 	end
 
@@ -243,8 +246,10 @@ _G.LoopPro = RunService.Heartbeat:Connect(function()
 	end
 
 end)
-spawn(function()
-	while wait(1) do
+
+_G.LoopFarm = RunService.Heartbeat:Connect(function()
+	if Debounce == false then
+		Debounce = true
 		if Settings["AutoStrikingPower"] then
 
 			if NeedEat == true then
@@ -253,10 +258,6 @@ spawn(function()
 			TakeStrikingPower() 
 			DoStrikingPower()
 		end
-	end
-end)
-spawn(function()
-	while wait(1) do
 		if Settings["AutoDelivery"] then
 			if NeedEat == true then
 				AutoEatFunc()
@@ -271,10 +272,6 @@ spawn(function()
 				ReplicatedStorage.Events.Bank:FireServer("Deposit",250000)
 			end
 		end
-	end
-end)
-spawn(function()
-	while wait(1) do
 		if Settings["AutoRoadwork"] then
 			if NeedEat == true then
 				AutoEatFunc()
@@ -282,6 +279,7 @@ spawn(function()
 			TakeRoadwork()
 			DoRoadwork()
 		end
+		Debounce = false
 	end
 end)
 
@@ -354,4 +352,9 @@ local AutoJob = Tab1:NewSection("Auto Job")
 
 local AutoDelivery = Tab1:NewToggle("Auto Delivery", false, function(value)
 	Settings["AutoDelivery"] = value
+end)
+
+local Hunger = Tab1:NewSlider("Speed", "", true, "/", {min = 1, max = 100, default = 35}, function(value)
+
+	Settings["Speed"] = value
 end)
