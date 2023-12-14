@@ -147,7 +147,11 @@ function DoJob()
 		if i == 1 then
 			AutoRun = false
 			wait(0.5)
-			local JobBillboard = PlayerGui.BillboardGui
+			
+			local JobBillboard = PlayerGui:FindFirstChild("BillboardGui")
+			if not JobBillboard then
+				return
+			end
 		end
 	end
 	AutoRun = false
@@ -279,6 +283,7 @@ _G.LoopFarm = RunService.Heartbeat:Connect(function()
 			TakeRoadwork()
 			DoRoadwork()
 		end
+		wait(1)
 		Debounce = false
 	end
 end)
